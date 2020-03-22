@@ -9,12 +9,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  final double MAIN_CONTAINER_COLUMN_PADDING = 10.0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void createWeatherInfo() async {
+
   }
 
   @override
@@ -24,24 +22,38 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: Padding(
+          padding: EdgeInsets.all(MAIN_CONTAINER_COLUMN_PADDING),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              createSearchBar()
+            ],
+          ))
+      ),// This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget createSearchBar() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children:<Widget>[
+          Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                    labelText: 'Enter name of Place'
+                ),
+              )
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: createWeatherInfo,
+          )
+        ]
+    );
+  }
+
+  Widget createWeatherView() {
+    
   }
 }
