@@ -39,7 +39,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title, style: TextStyle(color: Colors.lightBlueAccent),),
+        backgroundColor: Colors.white,
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Icon(Icons.cloud_queue, size: 35, color: Colors.lightBlueAccent,),
+          )
+        ],
       ),
       body: Center(
         child: Padding(
