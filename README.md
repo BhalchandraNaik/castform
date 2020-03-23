@@ -2,4 +2,4 @@
 
 Flutter application that gives weather information
 
-![Snapshot](/castform-snap.jpg?v=4&s=10)
+![Snapshot](/castform-snap.jpg?s=0.1)
