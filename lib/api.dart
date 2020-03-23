@@ -1,13 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'package:uri/uri.dart';
+import 'dart:io';
 import 'dart:convert' as convert;
+
 class ApiWrappers {
 
-  final String mapBoxRootUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
-  final String mapBoxApiKey = 'pk.eyJ1IjoiYm5haWsyNjExIiwiYSI6ImNqdDNsOTFpNDB2aW40OXBnamtlYnRzOGUifQ.wu8BxADFpu4VHpGsSJIAgg';
+  final String mapBoxRootUrl = Platform.environment['MAP_BOX_ROOT_URL'];
+  final String mapBoxApiKey = Platform.environment['MAP_BOX_API_KEY'];
 
-  final String darkSkyRootUrl = 'https://api.darksky.net/forecast';
-  final String darkSkyApiKey = '08d457ee37d5910a6903c6e1235df388';
+  final String darkSkyRootUrl = Platform.environment['DARK_SKY_ROOT_URL'];
+  final String darkSkyApiKey = Platform.environment['DARK_SKY_API_KEY'];
 
   final int LATITUDE_IDX = 0;
   final int LONGITUDE_IDX = 1;

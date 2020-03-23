@@ -1,5 +1,6 @@
 import 'package:castform/api.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final double MAIN_CONTAINER_COLUMN_PADDING = 10.0;
   final double WEATHER_ICON_HEIGHT = 200;
-  final String WEATHER_ICON_ROOT_URL = 'https://darksky.net/images/weather-icons/';
+  final String WEATHER_ICON_ROOT_URL = Platform.environment['WEATHER_ICON_ROOT_URL'];
 
   final locationQueryFieldController = TextEditingController();
 
