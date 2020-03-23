@@ -14,17 +14,18 @@ class ApiWrappers {
   Future<List> getLocationCoordinates(String locationName) async {
     List urlTemplateElements = [
       mapBoxRootUrl,
-      '{locationName}?access_token={apiKey}'
+      '{locationName}.json?access_token={apiKey}'
     ];
     var urlTemplate = new UriTemplate(urlTemplateElements.join("/"));
     String geolocResourceLink = urlTemplate.expand({
-      'locationName' : Uri.encodeFull(locationName),
+      'locationName' : Uri.encodeQueryComponent(locationName),
       'apiKey' : mapBoxApiKey
     });
 
-    var latitude, longitude = -1;
+    double latitude, longitude = -1;
 
     var apiResponse = await http.get(geolocResourceLink);
+    print(geolocResourceLink);
     if (apiResponse.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(apiResponse.body);
       latitude = jsonResponse['features'][0]['center'][LATITUDE_IDX];
@@ -34,15 +35,14 @@ class ApiWrappers {
   }
 
   Future<Map> getWeatherInfo(String locationName) async {
-    var geoCordinates = await this.getLocationCoordinates(locationName);
-
+    List geoCordinates =  await this.getLocationCoordinates(locationName);
     if (geoCordinates[LATITUDE_IDX] == -1 && geoCordinates[LATITUDE_IDX] == -1) {
       return {};
     } else {
       List urlTemplateElements = [
         darkSkyRootUrl,
         '{apiKey}',
-        '{latitude},{longitude}'
+        '{longitude},{latitude}'
       ];
 
       var urlTemplate = new UriTemplate(urlTemplateElements.join("/"));
@@ -53,8 +53,8 @@ class ApiWrappers {
         'apiKey' : darkSkyApiKey
       });
 
+      print(weatherInfoResourceLink);
       var apiResponse = await http.get(weatherInfoResourceLink);
-
       if (apiResponse.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(apiResponse.body);
         return jsonResponse['currently'];

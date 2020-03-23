@@ -1,3 +1,4 @@
+import 'package:castform/api.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,9 +11,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final double MAIN_CONTAINER_COLUMN_PADDING = 10.0;
+  final double WEATHER_ICON_HEIGHT = 100;
+  Map weatherInfo = null;
 
   void createWeatherInfo() async {
-
+    var apiCallerObject = new ApiWrappers();
+    await apiCallerObject.getWeatherInfo('Los Angeles').then((Map value) {
+      print('this is the problem');
+      print(value);
+      setState(() {
+        this.weatherInfo = value;
+      });
+    });
   }
 
   @override
@@ -27,7 +37,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              createSearchBar()
+              createSearchBar(),
+              createWeatherView()
             ],
           ))
       ),// This trailing comma makes auto-formatting nicer for build methods.
@@ -54,6 +65,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget createWeatherView() {
-    
+    if (this.weatherInfo == null) {
+      return Container();
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Image.network('https://darksky.net/images/weather-icons/'+ weatherInfo['icon'] +'.png', height: WEATHER_ICON_HEIGHT,),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text('Description'),
+              Text('this is the description')
+            ],
+          )
+        ],
+      );
+    }
   }
 }
