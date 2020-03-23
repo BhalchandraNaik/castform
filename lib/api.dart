@@ -8,8 +8,10 @@ class ApiWrappers {
 
   final String darkSkyRootUrl = 'https://api.darksky.net/forecast';
   final String darkSkyApiKey = '08d457ee37d5910a6903c6e1235df388';
+
   final int LATITUDE_IDX = 0;
   final int LONGITUDE_IDX = 1;
+  final int PLACE_NAME_IDX = 2;
 
   Future<List> getLocationCoordinates(String locationName) async {
     List urlTemplateElements = [
@@ -23,15 +25,17 @@ class ApiWrappers {
     });
 
     double latitude, longitude = -1;
+    String placeName = '';
 
     var apiResponse = await http.get(geolocResourceLink);
-    print(geolocResourceLink);
+
     if (apiResponse.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(apiResponse.body);
       latitude = jsonResponse['features'][0]['center'][LATITUDE_IDX];
       longitude = jsonResponse['features'][0]['center'][LONGITUDE_IDX];
+      placeName = jsonResponse['features'][0]['place_name'];
     }
-    return [latitude, longitude];
+    return [latitude, longitude, placeName];
   }
 
   Future<Map> getWeatherInfo(String locationName) async {
@@ -53,11 +57,12 @@ class ApiWrappers {
         'apiKey' : darkSkyApiKey
       });
 
-      print(weatherInfoResourceLink);
       var apiResponse = await http.get(weatherInfoResourceLink);
       if (apiResponse.statusCode == 200) {
         var jsonResponse = convert.jsonDecode(apiResponse.body);
-        return jsonResponse['currently'];
+        Map weatherInfo = jsonResponse['currently'];
+        weatherInfo['placeName'] = geoCordinates[PLACE_NAME_IDX];
+        return weatherInfo;
       } else {
         return {};
       }
