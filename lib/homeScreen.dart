@@ -1,3 +1,4 @@
+import 'package:castform/api.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,11 +10,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  final double MAIN_CONTAINER_COLUMN_PADDING = 10.0;
+  final double WEATHER_ICON_HEIGHT = 100;
+  Map weatherInfo = null;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  void createWeatherInfo() async {
+    var apiCallerObject = new ApiWrappers();
+    await apiCallerObject.getWeatherInfo('Los Angeles').then((Map value) {
+      print('this is the problem');
+      print(value);
+      setState(() {
+        this.weatherInfo = value;
+      });
     });
   }
 
@@ -24,24 +32,61 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: Padding(
+          padding: EdgeInsets.all(MAIN_CONTAINER_COLUMN_PADDING),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              createSearchBar(),
+              createWeatherView()
+            ],
+          ))
+      ),// This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget createSearchBar() {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children:<Widget>[
+          Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                    labelText: 'Enter name of Place'
+                ),
+              )
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: createWeatherInfo,
+          )
+        ]
+    );
+  }
+
+  Widget createWeatherView() {
+    if (this.weatherInfo == null) {
+      return Container();
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Image.network('https://darksky.net/images/weather-icons/'+ weatherInfo['icon'] +'.png', height: WEATHER_ICON_HEIGHT,),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text('Description'),
+              Text('this is the description')
+            ],
+          )
+        ],
+      );
+    }
   }
 }
